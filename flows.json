@@ -1,0 +1,173 @@
+[
+    {
+        "id": "33d9216c11aeb0e2",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "95cdd973a5cefc9d",
+        "type": "function",
+        "z": "33d9216c11aeb0e2",
+        "name": "function 252",
+        "func": "msg.url = `https://api.synthesia.io/v2/videos`\n\nmsg.headers = {\n    'Authorization': global.get('token'),\n    'Content-Type': 'application/json'\n}\n\nmsg.payload = {\n    \"test\": false,\n    \"title\": 'video',\n    \"description\": 'hello',\n    \"visibility\": \"private\",\n    \"input\": [{\n        \"scriptText\": msg.payload.text,\n        \"avatar\": msg.payload.avatar,\n        \"avatarSettings\": {\n            \"scale\": 1.0,\n            \"style\": \"rectangular\",\n            \"seamless\": false\n        },\n        \"background\": \"dark_blue\",\n        \"backgroundSettings\": {\n            \"videoSettings\": {\n                \"shortBackgroundContentMatchMode\": \"freeze\",\n                \"longBackgroundContentMatchMode\": \"trim\"\n            }\n        }\n    }],\n    \"soundtrack\": \"urban\"\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 290,
+        "y": 200,
+        "wires": [
+            [
+                "876b517ebb12c269"
+            ]
+        ]
+    },
+    {
+        "id": "876b517ebb12c269",
+        "type": "http request",
+        "z": "33d9216c11aeb0e2",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 395,
+        "y": 200,
+        "wires": [
+            [
+                "5a52ca124ea92221"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "5a52ca124ea92221",
+        "type": "function",
+        "z": "33d9216c11aeb0e2",
+        "name": "function 253",
+        "func": "\nif (msg.payload.status === 'in_progress'){\nmsg.payload = {\n    text: `Your video status ${msg.payload.status}. Wait 15 minutes and check it. Your video id: ${msg.payload.id}`,\n    id: msg.payload.id\n}\n}\nelse{\n    msg.payload= {\n        text: `Your video status ${msg.payload.status}. Try again.`   \n    }\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 200,
+        "wires": [
+            [
+                "cda9707e2ad2ddb1"
+            ]
+        ]
+    },
+    {
+        "id": "7cee1b44ef593f80",
+        "type": "http in",
+        "z": "33d9216c11aeb0e2",
+        "name": "",
+        "url": "/createVideo",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 120,
+        "y": 200,
+        "wires": [
+            [
+                "95cdd973a5cefc9d"
+            ]
+        ]
+    },
+    {
+        "id": "cda9707e2ad2ddb1",
+        "type": "http response",
+        "z": "33d9216c11aeb0e2",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 690,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "ce9ebd624c4d793a",
+        "type": "http in",
+        "z": "33d9216c11aeb0e2",
+        "name": "",
+        "url": "/checkVideo",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 120,
+        "y": 280,
+        "wires": [
+            [
+                "222a666160b04c04"
+            ]
+        ]
+    },
+    {
+        "id": "222a666160b04c04",
+        "type": "function",
+        "z": "33d9216c11aeb0e2",
+        "name": "function 254",
+        "func": "\nmsg.url = `https://api.synthesia.io/v2/videos/${msg.payload.id}`\nmsg.headers = {\n    'Authorization': global.get('token'),\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 280,
+        "wires": [
+            [
+                "840c2fa9d194d030"
+            ]
+        ]
+    },
+    {
+        "id": "840c2fa9d194d030",
+        "type": "http request",
+        "z": "33d9216c11aeb0e2",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 435,
+        "y": 280,
+        "wires": [
+            [
+                "293b811486992596"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "293b811486992596",
+        "type": "http response",
+        "z": "33d9216c11aeb0e2",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 530,
+        "y": 280,
+        "wires": []
+    }
+]
